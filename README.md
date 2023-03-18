@@ -1,6 +1,6 @@
 # Welcome to my Currency Converter!
 
-This is a simple Currency Calculator app created with React.
+This is a simple Currency Converter app created with React.
 
 ## Preview
 
