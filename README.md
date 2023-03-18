@@ -4,8 +4,10 @@ This is a simple Currency Calculator app created with React.
 
 ## Preview
 
-[Link](https://jakubjachacz.github.io/currency-converter-react/)
+![Preview](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGYwOGY2MzBmMTQ2MzFhZTk4YmZlY2RmMjY1ZDVkNjk3YjgwYzYzMyZjdD1n/ABANIDwnIfXthntKta/giphy.gif))
 
+### Demo
+[Link](https://jakubjachacz.github.io/currency-converter-react/)
 ### How to get started
 
 Simply enter an amount you wish to convert, select a currency and click "Przelicz".
