@@ -4,7 +4,7 @@ This is a simple Currency Calculator app created with React.
 
 ## Preview
 
-[Preview](https://jakubjachacz.github.io/currency-converter-react/)
+[Link](https://jakubjachacz.github.io/currency-converter-react/)
 
 ### How to get started
 
