@@ -10,9 +10,11 @@ import {
   Fail,
 } from "./styled";
 
-export const Form = ({ calculateResultProp, resultProp }) => {
-  const [result, setResult] = useState(resultProp);
+export const Form = () => {
+  const [result, setResult] = useState();
   const ratesData = useRatesData();
+  const [currency, setCurrency] = useState("EUR");
+  const [amount, setAmount] = useState("");
 
   const calculateResult = (currency, amount) => {
     const rate = ratesData.rates[currency];
@@ -24,48 +26,52 @@ export const Form = ({ calculateResultProp, resultProp }) => {
     });
   }
 
-  const [currency, setCurrency] = useState("EUR");
-  const [amount, setAmount] = useState("");
-
   const onSubmit = (event) => {
     event.preventDefault();
-    calculateResultProp(currency, amount);
+    calculateResult(currency, amount);
   }
 
   return (
     <StyledForm onSubmit={onSubmit}>
       <fieldset>
         <legend>Kalkulator walut</legend>
-        {ratesData.state === "loading" ? (
-          <Loading>
-            Prosimy poczekać, ładujemy kursy walut z Europejskiego Banku Centralnego
-          </Loading>
-        ) : ratesData.state === "error" ? (
-          <Fail>
-            Coś poszło nie tak. Sprawdź swoje połączenie z internetem lub spróbuj ponownie później.
-          </Fail>
-        ) : (
-          <>
-            <p>
-              <label>
-                <StyledSelect
-                  value={currency}
-                  onChange={({ target }) => setCurrency(target.value)}
-                >
-                  {currencies.map((currency) => (
-                    <option key={currency.short} value={currency.short}>
-                      {currency.name}
-                    </option>
-                  ))}
-                </StyledSelect>
-              </label>
-            </p>
-            <p>
-              <StyledButton type="submit">Przelicz</StyledButton>
-            </p>
-            <Result result={result} />
-          </>
-        )}
+        {ratesData.state === "loading"
+          ? (
+            <Loading>
+              Prosimy poczekać, ładujemy kursy walut z Europejskiego Banku Centralnego
+            </Loading>
+          )
+          : (
+            ratesData.state === "error" ? (
+              <Fail>
+                Coś poszło nie tak. Sprawdź swoje połączenie z internetem lub spróbuj ponownie później.
+              </Fail>
+            ) : (
+              <>
+                <p>
+                  <label>
+                    <StyledSelect
+                      value={currency}
+                      onChange={({ target }) => setCurrency(target.value)}
+                    >
+                      {Object.keys(ratesData.rates).map(((currency) => (
+                        <option
+                          key={currency}
+                          value={currency}
+                        >
+                          {currency}
+                        </option>
+                      )))} 
+                    </StyledSelect>
+                  </label>
+                </p>
+                <p>
+                  <StyledButton type="submit">Przelicz</StyledButton>
+                </p>
+                <Result result={result} />
+              </>
+            )
+          )}
         <p>
           <label>
             Kwota w PLN:
@@ -83,4 +89,4 @@ export const Form = ({ calculateResultProp, resultProp }) => {
       </fieldset>
     </StyledForm>
   );
-};
+}
