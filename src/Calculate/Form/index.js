@@ -1,22 +1,71 @@
-import { useState } from "react";
-import { currencies } from "../currencies";
+import React, { useState } from "react";
+import { useRatesData } from "./useRatesData";
 import { Result } from "./Result";
-import { StyledForm, StyledButton, StyledSelect, StyledInput } from "./styled";
+import {
+  StyledForm,
+  StyledSelect,
+  StyledButton,
+  StyledInput,
+  Loading,
+  Fail,
+} from "./styled";
 
-export const Form = ({ calculateResult, result }) => {
-  const [currency, setCurrency] = useState(currencies[0].short);
+export const Form = ({ calculateResultProp, resultProp }) => {
+  const [result, setResult] = useState(resultProp);
+  const ratesData = useRatesData();
+
+  const calculateResult = (currency, amount) => {
+    const rate = ratesData.rates[currency];
+
+    setResult({
+      sourceAmount: +amount,
+      targetAmount: amount * rate,
+      currency,
+    });
+  }
+
+  const [currency, setCurrency] = useState("EUR");
   const [amount, setAmount] = useState("");
 
   const onSubmit = (event) => {
     event.preventDefault();
-    calculateResult(currency, amount);
+    calculateResultProp(currency, amount);
   }
 
   return (
-    <StyledForm
-    onSubmit={onSubmit}>
+    <StyledForm onSubmit={onSubmit}>
       <fieldset>
         <legend>Kalkulator walut</legend>
+        {ratesData.state === "loading" ? (
+          <Loading>
+            Prosimy poczekać, ładujemy kursy walut z Europejskiego Banku Centralnego
+          </Loading>
+        ) : ratesData.state === "error" ? (
+          <Fail>
+            Coś poszło nie tak. Sprawdź swoje połączenie z internetem lub spróbuj ponownie później.
+          </Fail>
+        ) : (
+          <>
+            <p>
+              <label>
+                <StyledSelect
+                  value={currency}
+                  onChange={({ target }) => setCurrency(target.value)}
+                >
+                  {currencies.map((currency) => (
+                    <option key={currency.short} value={currency.short}>
+                      {currency.name}
+                    </option>
+                  ))}
+                </StyledSelect>
+              </label>
+            </p>
+            <p>
+              <StyledButton type="submit">Przelicz</StyledButton>
+            </p>
+            <Result result={result} />
+          </>
+        )}
         <p>
           <label>
             Kwota w PLN:
@@ -31,27 +80,7 @@ export const Form = ({ calculateResult, result }) => {
             />
           </label>
         </p>
-        <p>
-          <label>
-            <StyledSelect
-              value={currency}
-              onChange={({ target }) => setCurrency(target.value)}
-            >
-              {currencies.map((currency) => (
-                <option key={currency.short} value={currency.short}>
-                  {currency.name}
-                </option>
-              ))}
-            </StyledSelect>
-          </label>
-        </p>
-        <p>
-          <StyledButton>Przelicz</StyledButton>
-        </p>
-        <Result result={result} />
       </fieldset>
     </StyledForm>
   );
 };
-
-export default Form;

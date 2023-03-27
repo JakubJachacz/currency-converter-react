@@ -34,3 +34,10 @@ export const StyledInput = styled.input`
     height: 50px;
 `
  
+export const Loading = styled.p`
+color: teal;
+`;
+
+export const Fail = styled.p`
+color: red;
+`;
